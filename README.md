@@ -23,6 +23,7 @@ My name is **Sihaoyu Gao**, you can also call me **Sherry**. I am a first year M
 - [x] Emphasis (bold)
 - [x] Images
 - [x] Links
-- [x] Task Lists 
+- [x] Task Lists
 - [x] Tables
+- [x] Emojis
 - [ ] Blockquotes
