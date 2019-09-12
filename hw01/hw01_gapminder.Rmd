@@ -4,12 +4,19 @@ author: "Sihaoyu Gao"
 date: "Sep 11, 2019"
 output: github_document
 ---
+```{r setup, include=FALSE, echo=FALSE,warning=FALSE}
+options(width = 10)
+knitr::opts_chunk$set(echo = TRUE, comment=NA, size = "small")
+options(knitr.kable.NA = '')
+```
 
 
 ```{r load, warning = FALSE, echo = FALSE}
 library(gapminder)
 library(ggplot2)
 library(nlme)
+library(knitr)
+library(kableExtra)
 ```
 
 ## Introduction
@@ -20,7 +27,7 @@ This document explores the gapminder dataset. First of all, load the gapminder d
 names(gapminder)
 ```
 
-Country is a factor with 142 levels, continent is a factor with 5 levels, year ranges from 1952 to 2007 in increments of 5 years, lifeExp is life expectancy at birth (in years), pop is population, and gdpPercap is GDP per capita in US dollars. All the above information are provided in R.
+Country is a factor with 142 levels, continent is a factor with 5 levels, year ranges from 1952 to 2007 in increments of 5 years, lifeExp is life expectancy at birth (in years), pop is population, and gdpPercap is GDP per capita in US dollars. All the above information are provided in R. 
 
 ```{r}
 ?gapminder
@@ -28,7 +35,7 @@ Country is a factor with 142 levels, continent is a factor with 5 levels, year r
 
 ## Analysis
 
-Figure 1 shows the trajectories of GDP per capita over time for each country. There is one country has extremely high GDP per capita before 1980. By extracting the lines with remarkable high GDP from the dataset, it shows that the outstanding country is Kuwait in Asia. 
+Figure 1 shows the trajectories of GDP per capita over time for each country. There is one country had an extremely high GDP per capita before 1980. By extracting the lines with remarkable high GDP from the dataset, it shows that the outstanding country is Kuwait in Asia. 
 
 
 ```{r figs, echo=FALSE}
@@ -39,7 +46,48 @@ plot + geom_line()+ geom_point()+labs(caption = "Figure 1: trajectories of GDP p
   )
 ```
 
-Except show all 142 countries' change in GDP per capita over time, we can also plot the GDP per capita change in terms of different continents. Figure 2 shows the trajectories of GDP per capita over time for each continent. At each time point, GDP per capita for each continent is calculated by the mean of all the countries in the continent at that time point. From Figure 2, we can see that Europe and Oceania have the fastest increase rate of GDP per capita, while Africa has the lowest increase rate of GDP per capita over years. 
+The change in GDP per capita over time for each country can also be summarized by number. As shown in Table 1, Singapore in Asia had the greatest increase in GDP per capital over 55 years, followed by Norway in Europe. Singapore had an increase of 44828.04 in GDP per capital, while Norway increased 39261.77. As we have already seen that Kuwait in Asia had a huge decrease in GDP per capital for about 61075.3631, followed by Haiti in Americas with 638.7298 decrease in GDP per capital over 55 years. 
+
+```{r,echo=FALSE}
+data2<-gapminder[which(gapminder$year==2007),]
+names(data2)[6] <- "GDP after"
+data3<-gapminder[which(gapminder$year==1952),]
+names(data3)[6] <- "GDP before"
+data3<-data3[c(1,6)]
+data4<-merge(data2,data3,by="country")
+data4$change<-data4$`GDP after`-data4$`GDP before`
+min<-data4[which(data4$change==min(data4$change)),]
+min<-min[c(1,2,8)]
+names(min)[3] <- "GDP change"
+min<-cbind("least increase", min)
+data4<-data4[which(data4$country != "Kuwait"),]
+min2<-data4[which(data4$change==min(data4$change)),]
+min2<-min2[c(1,2,8)]
+names(min2)[3] <- "GDP change"
+min2<-cbind(NA, min2)
+names(min)[1] <- NA
+names(min2)[1] <- NA
+min<-rbind(min,min2)
+row.names(min) <- NULL
+max<-data4[which(data4$change==max(data4$change)),]
+max<-max[c(1,2,8)]
+names(max)[3] <- "GDP change"
+max<-cbind("most increase", max)
+data4<-data4[which(data4$country != "Singapore"),]
+max2<-data4[which(data4$change==max(data4$change)),]
+max2<-max2[c(1,2,8)]
+names(max2)[3] <- "GDP change"
+max2<-cbind(NA, max2)
+names(max)[1] <- NA
+names(max2)[1] <- NA
+max<-rbind(max,max2)
+row.names(max) <- NULL
+table<-rbind(max,min)
+kable(table, caption = "Table 1: Countries with the most and the least increase in GDP per capita") 
+```
+
+
+Except show all 142 countries' change in GDP per capita over time, we can also plot the GDP per capita change in terms of different continents. Figure 2 shows the trajectories of GDP per capita over time for each continent. At each time point, GDP per capita for each continent is calculated by the mean of all the countries in the continent at that time point. From Figure 2, we can see that Europe and Oceania had the fastest increase rate of GDP per capita, while Africa had the lowest increase rate of GDP per capita over years. 
 
 ```{r fig_2, echo=FALSE}
 Africa<-gapminder[which(gapminder$continent=="Africa"),]
@@ -65,7 +113,7 @@ plot + geom_line(aes(colour=continent))+ geom_point()+labs(caption = "Figure 2: 
   )
 ```
 
-Finally, instead of showing the GDP per capita change over time, it is interesting to explore the relationship between GDP per capita and life expectancy. From Figure 3, it is obvious that life expectancy increases as GDP per capita increase. 
+Finally, instead of showing the GDP per capita change over time, it is interesting to explore the relationship between GDP per capita and life expectancy. From Figure 3, it is obvious that life expectancy increases as GDP per capita increases. 
 
 ```{r scatter, echo=FALSE}
 attach(gapminder)
@@ -73,7 +121,7 @@ plot(log(gdpPercap),lifeExp,pch=20)
 title( sub = "Figure 3: Relationship between GDP per capita (in log) and life expectancy", cex.sub = 0.75)
 ```
 
-The correlation also indicates the same result. 0.8 is quite close to 1, and it illustrates that life expectancy and GDP per capita (in log) have a positive correlation.
+The correlation coefficient also indicates the same result. 0.8 is quite close to 1, and it illustrates that life expectancy and GDP per capita (in log) have a positive correlation.
 
 ```{r}
 cor(log(gdpPercap),lifeExp)
