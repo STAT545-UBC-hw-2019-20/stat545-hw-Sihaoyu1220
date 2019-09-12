@@ -3,8 +3,8 @@ Gapminder Exploration
 Sihaoyu Gao
 Sep 11, 2019
 
-1. Introduction
----------------
+Introduction
+------------
 
 This document explores the gapminder dataset. First of all, load the gapminder data set from `gapminder` library. Before doing any analysis, we need to understand the dataset. The data set is the excerpt of the Gapminder data on life expectancy, GDP per capita, and population by country. The main data frame gapminder has 1704 rows and 6 variables:
 
@@ -25,10 +25,10 @@ Country is a factor with 142 levels, continent is a factor with 5 levels, year r
 ?gapminder
 ```
 
-2. Analysis
------------
+Analysis
+--------
 
-### 2.1 GDP per capita change for countries
+### GDP per capita change for countries
 
 Figure 1 shows the trajectories of GDP per capita over time for each country. There is one country had an extremely high GDP per capita before 1980. By extracting the lines with remarkable high GDP from the dataset, it shows that the outstanding country is Kuwait in Asia.
 
@@ -113,13 +113,13 @@ Americas
 </tr>
 </tbody>
 </table>
-### 2.2 GDP per capita change for continents
+### GDP per capita change for continents
 
 Except show all 142 countries' change in GDP per capita over time, we can also plot the GDP per capita change in terms of different continents. Figure 2 shows the trajectories of GDP per capita over time for each continent. At each time point, GDP per capita for each continent is calculated by the mean of all the countries in the continent at that time point. From Figure 2, we can see that Europe and Oceania had the fastest increase rate of GDP per capita, while Africa had the lowest increase rate of GDP per capita over years.
 
 ![](hw01_gapminder_files/figure-markdown_github/fig_2-1.png)
 
-### 2.3 GDP per capita vs. life expectancy
+### GDP per capita vs. life expectancy
 
 Finally, instead of showing the GDP per capita change over time, it is interesting to explore the relationship between GDP per capita and life expectancy. From Figure 3, it is obvious that life expectancy increases as GDP per capita increases.
 
