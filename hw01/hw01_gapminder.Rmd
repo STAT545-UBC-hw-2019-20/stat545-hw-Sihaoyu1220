@@ -83,6 +83,7 @@ names(max2)[1] <- NA
 max<-rbind(max,max2)
 row.names(max) <- NULL
 table<-rbind(max,min)
+names(table)[1] <- "Comment"
 kable(table, caption = "Table 1: Countries with the most and the least increase in GDP per capita") 
 ```
 
