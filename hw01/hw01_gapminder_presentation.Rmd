@@ -46,7 +46,7 @@ names(gapminder)
 
 ---
 
-# 2.1 GDP per capita change for countries
+# GDP per capita change for countries
 
 Figure 1 shows the trajectories of GDP per capita over time for each country. There is one country had an extremely high GDP per capita before 1980, which is Kuwait in Asia.
 
@@ -115,7 +115,7 @@ kable(table,caption = "Table 1: Countries with the most and the least increase i
 
 ---
 
-# 2.2 GDP per capita change for continents
+# GDP per capita change for continents
 
 - Europe and Oceania had the fastest increase rate of GDP per capita.
 - Africa had the lowest increase rate of GDP per capita over years. 
@@ -155,5 +155,13 @@ attach(gapminder)
 plot(log(gdpPercap),lifeExp,pch=20, sub = "Figure 3: Relationship between GDP per capita (in log) and life expectancy")
 ```
 
+---
+# GDP per capita vs. life expectancy
+
+The correlation coefficient also indicates the same result. 0.8 is quite close to 1, and it illustrates that life expectancy and GDP per capita (in log) have a positive correlation.
+
+```{r}
+cor(log(gdpPercap),lifeExp)
+```
 
 
