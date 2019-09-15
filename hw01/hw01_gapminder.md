@@ -8,7 +8,7 @@ Sihaoyu Gao
     -   [2.2 GDP per capita change for continents](#gdp-per-capita-change-for-continents)
     -   [2.3 GDP per capita vs. life expectancy](#gdp-per-capita-vs.-life-expectancy)
 
-1. Introduction
+## 1. Introduction
 ---------------
 
 This document explores the gapminder dataset. First of all, load the gapminder data set from `gapminder` library. Before doing any analysis, we need to understand the dataset. The data set is the excerpt of the Gapminder data on life expectancy, GDP per capita, and population by country. The main data frame gapminder has 1704 rows and 6 variables:
@@ -30,7 +30,7 @@ Country is a factor with 142 levels, continent is a factor with 5 levels, year r
 ?gapminder
 ```
 
-2. Analysis
+## 2. Analysis
 -----------
 
 ### 2.1 GDP per capita change for countries
