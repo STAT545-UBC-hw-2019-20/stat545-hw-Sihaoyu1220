@@ -50,7 +50,7 @@ plot + geom_line()+ geom_point()+labs(caption = "Figure 1: trajectories of GDP p
   )
 ```
 
-The change in GDP per capita over time for each country can also be summarized by number. As shown in Table 1, Singapore in Asia had the greatest increase in GDP per capital over 55 years, followed by Norway in Europe. Singapore had an increase of 44828.04 in GDP per capital, while Norway increased 39261.77. As we have already seen that Kuwait in Asia had a huge decrease in GDP per capital for about 61075.3631, followed by Haiti in Americas with 638.7298 decrease in GDP per capital over 55 years. 
+The change in GDP per capita over time for each country can also be summarized by number.
 
 ```{r,echo=FALSE}
 data2<-gapminder[which(gapminder$year==2007),]
@@ -91,7 +91,7 @@ names(table)[1] <- "Comment"
 kable(table, caption = "Table 1: Countries with the most and the least increase in GDP per capita",align='c') 
 ```
 
-
+As shown in Table 1, Singapore in Asia had the greatest increase in GDP per capital over 55 years, followed by Norway in Europe. Singapore had an increase of 44828.04 in GDP per capital, while Norway increased 39261.77. As we have already seen that Kuwait in Asia had a huge decrease in GDP per capital for about 61075.3631, followed by Haiti in Americas with 638.7298 decrease in GDP per capital over 55 years. 
 
 ### 2.2 GDP per capita change for continents
 
