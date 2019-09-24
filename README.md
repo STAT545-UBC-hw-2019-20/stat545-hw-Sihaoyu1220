@@ -11,7 +11,7 @@ My name is **Sihaoyu Gao**, you can also call me **Sherry**. I am a first year M
 | Homework number     | Due date |           
 | -------------  | :-------------: |
 | [hw01](https://github.com/STAT545-UBC-hw-2019-20/stat545-hw-Sihaoyu1220/tree/master/hw01)     | September 17, 2019 | 
-| [hw02[(https://github.com/STAT545-UBC-hw-2019-20/stat545-hw-Sihaoyu1220/tree/master/hw02)      | September 24, 2019   |
+| [hw02](https://github.com/STAT545-UBC-hw-2019-20/stat545-hw-Sihaoyu1220/tree/master/hw02)      | September 24, 2019   |
 | hw03   | October 01, 2019    |  
 | hw04   | October 08, 2019|
 | hw05  | October 18, 2019 |
