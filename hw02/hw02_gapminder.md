@@ -174,6 +174,7 @@ Asia
 </tr>
 </tbody>
 </table>
+
 ### 1.2 Use the pipe operator `%>%` to select “country” and “gdpPercap” from your filtered dataset in 1.1.
 
 ``` r
@@ -244,6 +245,7 @@ Japan
 </tr>
 </tbody>
 </table>
+
 ### 1.3 Filter gapminder to all entries that have experienced a drop in life expectancy.
 
 There are 102 entires that have experienced a drop in life expectancy compared to their last entry (for the same country). The table shows the first 10 such entries.
@@ -515,6 +517,7 @@ Africa
 </tr>
 </tbody>
 </table>
+
 ### 1.4 Filter gapminder so that it shows the max GDP per capita experienced by each country.
 
 There are 142 countries in gapminder data. The table only shows 10 countries with their max GDP per capita,
@@ -752,6 +755,7 @@ Europe
 </tr>
 </tbody>
 </table>
+
 ### 1.5 Produce a scatterplot of Canada’s life expectancy vs. GDP per capita using `ggplot2`, without defining a new variable. Ensure GDP per capita is on a log scale.
 
 ``` r
@@ -829,6 +833,7 @@ Oceania
 </tr>
 </tbody>
 </table>
+
 Next, I calculate the range of GDP per capita in terms of different continents. As shown in table, Asia has the widest range of GDP per capita, which is 113192.13, while Africa has the most narrow range of GDP per capita, which is 21710.05.
 
 <table>
@@ -921,6 +926,7 @@ Asia
 </tr>
 </tbody>
 </table>
+
 ### 2.2 What values are typical? What’s the spread? What’s the distribution? Etc., tailored to the variable at hand.
 
 As shown in the previous table, we can see that Asia contains an extremely high GDP per capita compared to other continent, which is 113523.13. We can show the spread of GDP per capita with respect to different continents by using side-by-side boxplots. The GDP per capita is drawn on log scale.
@@ -1221,6 +1227,7 @@ Africa
 </tr>
 </tbody>
 </table>
+
 They did not succeed. The output contain only half of the desired output. It seems that the argument `country == c("Rwanda", "Afghanistan")` filters Rwanda and Afghanistan in an alternate way. In the year 1952, select country Afghanistan; in the year 1957, select country Rwanda; in the year 1962, select countr Afghanistan again, and so on. The correct way to do this is to add an "or" argument in the filter function.
 
 ``` r
