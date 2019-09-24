@@ -1,0 +1,33 @@
+---
+title: "Optional: Tibble display"
+output: html_document
+---
+```{r setup, include=FALSE, echo=FALSE,warning=FALSE}
+options(width = 10)
+knitr::opts_chunk$set(echo = TRUE, comment=NA, size = "small")
+options(knitr.kable.NA = '')
+```
+
+
+```{r load, warning = FALSE, echo = FALSE, message=FALSE}
+library(gapminder)
+library(knitr)
+library(tidyverse)
+```
+
+The following small tibbles display data for Canada from 1987 to 2007.
+
+```{r}
+gapminder %>%
+  filter(country == "Canada",
+         year >= 1987) %>% 
+  knitr::kable()
+```
+
+The following large tibbles display all the gapminder data.
+
+```{r}
+gapminder %>%
+  filter(year==1952) %>% 
+  DT::datatable()
+```
