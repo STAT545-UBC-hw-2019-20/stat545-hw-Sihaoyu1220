@@ -1,0 +1,172 @@
+---
+title: "Explore Gapminder and use dplyr"
+author: "Sihaoyu Gao"
+output:
+  github_document:
+    toc: true
+---
+```{r setup, include=FALSE, echo=FALSE,warning=FALSE}
+options(width = 10)
+knitr::opts_chunk$set(echo = TRUE, comment=NA, size = "small")
+options(knitr.kable.NA = '')
+```
+
+
+```{r load, warning = FALSE, echo = FALSE, message=FALSE}
+library(gapminder)
+library(ggplot2)
+library(knitr)
+library(kableExtra)
+library(tidyverse)
+```
+
+## Exercise 1: Basic `dplyr`
+
+### 1.1 Use `filter()` to subset the `gapminder` data to three countries of your choice in the 1970’s.
+
+```{r}
+gapminder1 <- gapminder %>%
+  filter(year <= 1979 & year >= 1970,
+         country=='China' | country== 'Canada' | country == 'Japan') 
+kable(gapminder1)
+```
+
+### 1.2 Use the pipe operator `%>%` to select “country” and “gdpPercap” from your filtered dataset in 1.1.
+
+```{r}
+gapminder2 <- gapminder1 %>% 
+  select(country,gdpPercap)
+kable(gapminder2)
+```
+
+### 1.3 Filter gapminder to all entries that have experienced a drop in life expectancy.
+
+There are 102 entires that have experienced a drop in life expectancy compared to their last entry (for the same country). The table shows the first 10 such entries.
+
+```{r}
+gapminder3<-gapminder %>% 
+  mutate(increaselifeExp = gapminder$lifeExp-lag(gapminder$lifeExp,1)) %>% 
+  filter(year != 1952,
+         increaselifeExp < 0)
+kable(gapminder3[1:10,])
+```
+
+### 1.4 Filter gapminder so that it shows the max GDP per capita experienced by each country.
+
+There are 142 countries in gapminder data. The table only shows 10 countries with their max GDP per capita,
+
+```{r}
+gapminder4 <- gapminder %>% 
+  group_by(country) %>% 
+  filter(gdpPercap == max(gdpPercap))
+kable(gapminder4[1:10,])
+```
+
+### 1.5 Produce a scatterplot of Canada’s life expectancy vs. GDP per capita using `ggplot2`, without defining a new variable. Ensure GDP per capita is on a log scale.
+
+```{r}
+gapminder %>% 
+  filter(country=="Canada") %>% 
+  ggplot(aes(x = gdpPercap, y = lifeExp)) + geom_point() +
+  labs(y="Life Expectancy", x="GDP per capita on a log10 scale") +
+  scale_x_continuous(trans='log10')+
+  theme_bw()+labs(caption = "Figure 1: scatterplot of Canada’s life expectancy vs. GDP per capita") + 
+  theme(plot.caption = element_text(hjust = 0.5))
+```
+
+## Exercise 2: Explore individual variables with `dplyr`
+
+Pick one categorical variable and one quantitative variable to explore. Answer the following questions in whichever way you think is appropriate, using `dplyr`:
+
+### 2.1 What are possible values (or range, whichever is appropriate) of each variable?
+
+I will explore continent and GDP per capital in this section. As shown in table, There are 5 continents in the dataset, which are Africa, Americas, Aisa, Europe, and Oceania. By counting number of countries in each continent, there are 52 countries collected in Africa and only 2 countries collected in Oceania. 
+
+```{r,echo=FALSE}
+gapminder5 <- gapminder %>% 
+  group_by(continent) %>% 
+  summarize(numcountries = n_distinct(country))
+kable(gapminder5)
+```
+
+Next, I calculate the range of GDP per capita in terms of different continents. As shown in table, Asia has the widest range of GDP per capita, which is 113192.13, while Africa has the most narrow range of GDP per capita, which is 21710.05.
+
+```{r,echo=FALSE}
+gapminder6<-gapminder %>% 
+  group_by(continent) %>% 
+  summarize(mingdpPercap = min(gdpPercap), maxgdpPercap = max(gdpPercap)) %>% 
+  mutate(rangegdpPercap = maxgdpPercap-mingdpPercap) %>% 
+  arrange(rangegdpPercap)
+kable(gapminder6)
+```
+
+### 2.2 What values are typical? What’s the spread? What’s the distribution? Etc., tailored to the variable at hand.
+
+As shown in the previous table, we can see that Asia contains an extremely high GDP per capita compared to other continent, which is 113523.13. We can show the spread of GDP per capita with respect to different continents by using side-by-side boxplots. The GDP per capita is drawn on log scale. 
+
+```{r, echo=FALSE}
+gapminder %>% 
+  ggplot(aes(x = continent, y = gdpPercap)) + geom_boxplot() +
+  scale_y_continuous(trans='log10') + 
+  labs(caption = "Figure 2: Side-by-side boxplot of GDP per capita with respect to different continents") + 
+  theme(plot.caption = element_text(hjust = 0.5))
+```
+
+The overall distribution of GDP per capita is displayed in figure 3. The GDP per capita is also on log scale. We can see that the GDP per capita follows a bimodal distribution, with slightly right skewed tail. 
+
+```{r, echo=FALSE}
+gapminder %>% 
+  ggplot(aes(x=gdpPercap)) + 
+  scale_x_continuous(trans='log10') +
+  geom_histogram(aes(y=..density..),    
+                     binwidth=0.05,
+                     colour="black", fill="white") +
+  geom_density(alpha=.2, fill="#FF6666") + 
+  labs(caption = "Figure 3: Density plot of GDP per capita") + 
+  theme(plot.caption = element_text(hjust = 0.5))
+```
+
+## Exercise 3: Explore various plot types 
+
+### 3.1 A scatterplot of two quantitative variables.
+
+Someone may interested in exploring the relationship between GDP per capita and life expectancy. From figure 4, it is obvious that life expectancy increases as GDP per capita increases. 
+
+```{r scatter, echo=FALSE}
+gapminder %>% 
+  ggplot(aes(x = gdpPercap, y = lifeExp)) +
+  scale_x_continuous(trans='log10') +
+  geom_point()+ 
+  labs(caption = "Figure 4: Scatterplot of life expectancy vs. GDP per capita") + 
+  theme(plot.caption = element_text(hjust = 0.5))
+```
+
+### 3.2 One other plot besides a scatterplot.
+
+The following plot demonstrates the GDP per capita change in terms of different continents. At each time point, GDP per capita for each continent is calculated by the mean of all the countries in the continent at that time point. From figure 5, we can see that Europe and Oceania had the fastest increase rate of GDP per capita, while Africa had the lowest increase rate of GDP per capita over years. 
+
+
+```{r, echo=FALSE}
+gapminder7 <- gapminder %>% 
+  group_by(continent, year) %>% 
+  summarize(mean = mean(gdpPercap)) 
+ggplot(data = gapminder7, aes(x =year, y = mean, group =continent)) +
+  geom_line(aes(colour=continent))+ 
+  geom_point()+
+  labs(caption = "Figure 5: trajectories of GDP per capita over time for each continent")+
+  theme(plot.caption = element_text(hjust = 0.5))
+```
+
+## Optional: Recycling
+
+Evaluate this code and describe the result. Presumably the analyst’s intent was to get the data for Rwanda and Afghanistan. Did they succeed? Why or why not? If not, what is the correct way to do this?
+
+```{r}
+kable(filter(gapminder, country == c("Rwanda", "Afghanistan")))
+```
+
+They did not succeed. The output contain only half of the desired output. It seems that the argument `country == c("Rwanda", "Afghanistan")` filters Rwanda and Afghanistan in an alternate way. In the year 1952, select country Afghanistan; in the year 1957, select country Rwanda; in the year 1962, select countr Afghanistan again, and so on. The correct way to do this is to add an "or" argument in the filter function.
+
+```{r}
+kable(filter(gapminder, country == "Rwanda" | country == "Afghanistan"))
+```
