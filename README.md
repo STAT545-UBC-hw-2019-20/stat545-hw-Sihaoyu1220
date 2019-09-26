@@ -6,7 +6,7 @@ This is Sihaoyu's homework repository for STAT 545 at The University of British 
 ## 2. About Me :bust_in_silhouette:
 My name is **Sihaoyu Gao**, you can also call me **Sherry**. I am a first year Msc. Biostatistics student at UBC, and I also completed my undergraduate degree in honor statistics at UBC in spring 2019. 
 
-## 3. Homework Nevigation :date:
+## 3. Homework Navigation :date:
 
 | Homework number     | Due date |           
 | -------------  | :-------------: |
