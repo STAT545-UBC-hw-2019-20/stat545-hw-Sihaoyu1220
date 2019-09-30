@@ -1,0 +1,133 @@
+---
+title: "Assignment 03: dplyer/ggplot2 Part II"
+author: "Sihaoyu Gao"
+output:
+  html_document:
+    toc: true
+---
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+```
+
+
+```{r load, warning = FALSE, echo = FALSE, message=FALSE}
+library(gapminder)
+library(ggplot2)
+library(knitr)
+library(kableExtra)
+library(tidyverse)
+```
+
+## Task Option 2
+
+Get the maximum and minimum of GDP per capita for all continents.
+
+```{r}
+gapminder1 <-gapminder %>%
+  group_by(continent) %>% 
+  mutate(comment = ifelse(gdpPercap == min(gdpPercap), "minimum", 
+                          ifelse(gdpPercap == max(gdpPercap), "maximum", "Other"))) %>% 
+  filter(comment == "minimum" | comment == "maximum") %>% 
+  select(continent, country, year, comment, gdpPercap) %>% 
+  arrange(continent, desc(comment)) 
+
+gapminder1 %>% 
+  knitr::kable() %>% 
+  kable_styling(position = "center", full_width = F)
+```
+
+The above table shows the minimum and maximum of GDP per capita for all continents, with corresponding country and year. For example, we can see that Congo produced the least GDP per capita in Africa in 2002 and Libya produced the greatest GDP per capita in Africa in 1977. To visualize the table, I made a side-by-side barplot.
+
+```{r}
+gapminder1 %>% 
+  ggplot(aes(x = continent, y= gdpPercap, fill = comment), xlab="continent") +
+  geom_bar(stat="identity", width=.5, position = "dodge")+
+  scale_y_log10(labels = scales::dollar_format())+
+  labs(caption = "Figure 1: Side-by-side barplot of GDP per capita for each continent",
+       y = "GDP per capita in log scale") +
+  theme(plot.caption = element_text(hjust = 0.5))
+```
+
+In Figure 1, GDP per capita is shown in log scale. From the figure, Asia had the highest GDP per capita while Africa had the lowest GDP per capita.
+
+## Task Option 3
+
+Look at the spread of GDP per capita within the continents.
+
+```{r}
+gapminder %>%
+  group_by(continent) %>% 
+  summarize(minimum = quantile(gdpPercap)[1], `1st quantile` = quantile(gdpPercap)[2], 
+            median = quantile(gdpPercap)[3], `3rd quantile` = quantile(gdpPercap)[4], 
+            maximum = quantile(gdpPercap)[5]) %>% 
+  knitr::kable() %>% 
+  kable_styling(position = "center", full_width = F)
+```
+
+The above table shows the spread of GDP per capita within the continents. It is very hard to compare the spread of GDP per capita for each continent, so visualization is necessary.
+
+```{r}
+gapminder %>% 
+  ggplot(aes(x = continent, y = gdpPercap)) +
+  geom_boxplot(aes(fill = continent)) +
+  labs(caption = "Figure 2: Boxplot of GDP per capita for each continent",
+       y = "GDP per capita") +
+  theme(plot.caption = element_text(hjust = 0.5))
+```
+
+From Figure 2, it is easy to see that Asia has the widest spread of GDP per capita with consideration of the outliers. If we don't take the outliers into account, then Europe has the widest spread of GDP per capita while Africa has the least.
+
+## Task Option 5
+
+How is life expectancy changing over time on different continents?
+
+```{r}
+gapminder %>% 
+  group_by(continent, year) %>% 
+  summarize(lifeExp = mean(lifeExp)) %>%
+  DT::datatable()
+```
+
+The above table shows the life expectancy change over time on different continents. However, it is difficult to see the life expectancy trjectories for each continents. Then I used the following line plot to visualize the trend.
+
+```{r, echo=FALSE}
+gapminder %>% 
+  group_by(continent, year) %>% 
+  summarize(lifeExp = mean(lifeExp)) %>% 
+  ggplot(aes(x =year, y = lifeExp, group =continent)) +
+  geom_line(aes(colour=continent))+ 
+  geom_point()+
+  labs(caption = "Figure 3: trajectories of life expectancy over time for each continent",
+       y = "life expectancy")+
+  theme(plot.caption = element_text(hjust = 0.5))
+```
+
+From Figure 3, it is obvious that the life expectancy has been increasing monotonically for all continents over years. However, Africa has slightly different trend than other continents. The life expectancy trjectory for Africa increased until 1987 and it stay flat from 1987 to 2002. After 2002, the life expectancy returned to growth trend.
+
+## Optional Exercise
+
+Get table and figure side-by-side.
+
+```{r two-column, results='asis', echo=FALSE, out.extra='',fig.pos="left", fig.width=6,fig.height=5}
+library(knitr)
+cat("<table class='container'><tr>")
+cat("<td>")
+gapminder %>%
+  group_by(continent) %>% 
+  summarize(minimum = quantile(gdpPercap)[1], 
+            median = quantile(gdpPercap)[3],  
+            maximum = quantile(gdpPercap)[5]) %>% 
+  knitr::kable() %>% 
+  kable_styling(position = "left", full_width = F)
+cat("</td>")
+cat("<td>")
+gapminder %>% 
+  ggplot(aes(x = continent, y = gdpPercap)) +
+  geom_boxplot(aes(fill = continent)) +
+  labs(y = "GDP per capita") +
+  theme(plot.caption = element_text(hjust = 0.5))
+cat("</td>")
+cat("</tr></table>")
+```
+
+
