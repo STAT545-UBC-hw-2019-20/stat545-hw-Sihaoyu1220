@@ -38,7 +38,7 @@ gapminder1 %>%
 
 The above table shows the minimum and maximum of GDP per capita for all continents, with corresponding country and year. For example, we can see that Congo produced the least GDP per capita in Africa in 2002 and Libya produced the greatest GDP per capita in Africa in 1977. To visualize the table, I made a side-by-side barplot.
 
-```{r}
+```{r,fig.pos="center"}
 gapminder1 %>% 
   ggplot(aes(x = continent, y= gdpPercap, fill = comment), xlab="continent") +
   geom_bar(stat="identity", width=.5, position = "dodge")+
@@ -66,7 +66,7 @@ gapminder %>%
 
 The above table shows the spread of GDP per capita within the continents. It is very hard to compare the spread of GDP per capita for each continent, so visualization is necessary.
 
-```{r}
+```{r,fig.pos="center"}
 gapminder %>% 
   ggplot(aes(x = continent, y = gdpPercap)) +
   geom_boxplot(aes(fill = continent)) +
@@ -90,7 +90,7 @@ gapminder %>%
 
 The above table shows the life expectancy change over time on different continents. However, it is difficult to see the life expectancy trjectories for each continents. Then I used the following line plot to visualize the trend.
 
-```{r, echo=FALSE}
+```{r, echo=FALSE,fig.pos="center"}
 gapminder %>% 
   group_by(continent, year) %>% 
   summarize(lifeExp = mean(lifeExp)) %>% 
