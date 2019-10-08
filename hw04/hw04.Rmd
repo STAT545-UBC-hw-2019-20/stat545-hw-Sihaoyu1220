@@ -1,0 +1,140 @@
+---
+title: "Assignment 04: Tidy Data and Joins"
+author: "Sihaoyu Gao"
+output:
+  html_document:
+    toc: true
+---
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+```
+
+
+```{r load, warning = FALSE, echo = FALSE, message=FALSE}
+library(gapminder)
+library(ggplot2)
+library(knitr)
+library(kableExtra)
+library(tidyverse)
+```
+
+## Exercise 1: Univariate Option 1
+
+### 1. Wider Format
+
+Make a tibble with one row per year, and columns for life expectancy for China and Canada.
+
+```{r}
+gapminder1 <- gapminder %>%
+  filter(country %in% c("China","Canada")) %>% 
+  pivot_wider(id_cols = year,
+              names_from = country,
+              values_from = lifeExp,
+              names_prefix = "Life Expectancy for ") 
+
+DT::datatable(gapminder1)
+```
+
+### 2. Plot
+
+The plot shows the scatterplot of life expectancy for China against Canada, with year beside each point.
+
+```{r,fig.pos="center"}
+gapminder1 %>%
+  ggplot(aes(`Life Expectancy for China`, `Life Expectancy for Canada`)) +
+  geom_point() +
+  geom_text(aes(label = year), size = 3, hjust=-0.3) +
+  labs(title = "Scatterplot of Life Expectancy for China against Canada",
+       x = "Life Expectancy for China",
+       y = "Life Expectancy for Canada") +
+  theme_bw()
+```
+
+### 3. Re-lengthen
+
+Re-lengthen the data.
+
+```{r}
+gapminder1 %>% 
+  pivot_longer(cols = c(2:3),
+               names_to = "country",
+               names_prefix = "Life Expectancy for ",
+               values_to = "lifeExp") %>% 
+  arrange(country) %>% 
+  DT::datatable()
+```
+
+
+## Exercise 2: Multivariate Option 1
+
+### 1. Wider Format
+
+Make a tibble with one row per year, and columns for life expectancy and GDP per capita for China and Canada.
+
+```{r}
+gapminder2 <- gapminder %>%
+  filter(country %in% c("China","Canada")) %>% 
+  select(year, country, lifeExp, gdpPercap) %>% 
+  pivot_wider(id_cols = year,
+              names_from = country,
+              values_from = c(lifeExp, gdpPercap)) 
+
+DT::datatable(gapminder2)
+```
+
+### 2. Re-lengthen
+
+Re-lengthen the data.
+
+```{r,fig.pos="center"}
+gapminder2 %>%
+  pivot_longer(cols = c(2:5),
+               names_to = c(".value", "country"),
+               names_sep = "_") %>% 
+  arrange(country) %>% 
+  DT::datatable()
+```
+
+## Exercise 3: Table Joins
+
+Read in the made-up wedding guestlist and email addresses.
+
+```{r, message = FALSE}
+guest <- read_csv("https://raw.githubusercontent.com/STAT545-UBC/Classroom/master/data/wedding/attend.csv")
+email <- read_csv("https://raw.githubusercontent.com/STAT545-UBC/Classroom/master/data/wedding/emails.csv")
+```
+
+### 3.1 Add Emails
+
+For each guest in the guestlist (`guest` tibble), add a column for email address, which can be found in the `email` tibble.
+
+```{r}
+email1 <- email %>%
+  separate_rows(guest, sep = ", ") %>% 
+  rename(name = guest)
+
+guest %>%
+  left_join(email1, by = "name") %>%
+  DT::datatable()
+```
+
+### 3.2 Uninvited Emails.
+
+We have emails for Turner Jones, Turner Jones and Turner Jones, but they are not on the guestlist yet.
+
+```{r}
+email1 %>%
+  anti_join(guest, by = "name") %>%
+  DT::datatable()
+```
+
+### 3.3 Full guestlist.
+
+Make a guestlist that includes everyone we have emails for (in addition to those on the original guestlist).
+
+```{r}
+guest %>% 
+  full_join(email1, by = "name") %>% 
+  DT::datatable()
+```
+
